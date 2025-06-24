@@ -125,6 +125,14 @@ table.dataTable {
     flex-wrap: wrap;
 }
 
+/* disable controls when editing is disabled */
+
+#map.disable-editing #editing-buttons,
+#map.disable-editing #pois-button,
+#map.disable-editing #opacity-slider {
+    display: none;
+}
+
 /* bottom underneath top controls when overlapping */
 .leaflet-bottom {
     z-index: 999;
@@ -144,6 +152,20 @@ table.dataTable {
 }
 .navbar-dark .navbar-toggler {
     background-image: none;
+}
+
+.navbar-nav {
+    width: 100%;
+}
+
+@media (min-width: 1080px) {
+    .navbar-nav .dropdown {
+        min-width: 300px;
+    }
+
+    .navbar-nav .dropdown-menu {
+        max-width: 300px;
+    }
 }
 
 /* disabled style for "Custom" option, but not for selected items */
@@ -914,6 +936,10 @@ table.dataTable.display tbody tr:hover.selected {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.leaflet-sidebar-right.collapsed li:not(:first-of-type) {
+    display: none;
 }
 
 /* corresponding to leaflet-sidebar-expand/-close in leaflet-sidebar-v2 */
