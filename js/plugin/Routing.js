@@ -243,10 +243,23 @@ BR.Routing = L.Routing.extend({
         L.DomEvent.addListener(document, 'keydown', this._keydownListener, this);
         L.DomEvent.addListener(document, 'keyup', this._keyupListener, this);
 
-        // enable drawing mode
-        // this.draw(true);
+        // disable drawing and editing by default
+        this.toggleEditing(false);
 
         return container;
+    },
+
+    toggleEditing(enabled) {
+        this._editingEnabled = enabled;
+
+        if (enabled) {
+            this._edit.enable();
+        } else {
+            this.draw(false);
+            this._edit.disable();
+        }
+
+        this.toggleWaypointsEditing(enabled);
     },
 
     _addSegmentCasing(e) {
@@ -366,6 +379,34 @@ BR.Routing = L.Routing.extend({
         this._loadingTrailerGroup.addTo(this._map);
         this._waypoints._map = this._map;
         this._waypoints.addTo(this._map);
+
+        this.toggleWaypointsEditing(this._editingEnabled);
+    },
+
+    toggleWaypointsEditing(enabled) {
+        let wpt = this._waypoints._first;
+        while (wpt) {
+            if (enabled) {
+                // (re-) enable clicks
+                if (wpt._events.disabledClick) {
+                    wpt._events.click = wpt._events.disabledClick;
+                    wpt._events.disabledClick = null;
+                }
+
+                // enable dragging
+                wpt.dragging.enable();
+            } else {
+                // disable clicks
+                wpt._events.disabledClick = wpt._events.click;
+                wpt._events.click = [];
+
+                // disable dragging
+                wpt.dragging.disable();
+            }
+
+            console.log(wpt);
+            wpt = wpt._routing.nextMarker;
+        }
     },
 
     // patch to fix error when line is null or error line

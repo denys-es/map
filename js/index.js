@@ -62,6 +62,8 @@
                     onClick(control) {
                         L.DomUtil.removeClass(mapContext.map.getContainer(), 'disable-editing');
                         control.state('editing-enabled');
+
+                        routing.toggleEditing(true);
                     },
                     title: i18next.t('keyboard.generic-shortcut', {
                         action: '$t(map.enable-editing)',
@@ -74,8 +76,7 @@
                     onClick(control) {
                         L.DomUtil.addClass(mapContext.map.getContainer(), 'disable-editing');
 
-                        routing.draw(false);
-                        // TODO: disable all other stuff
+                        routing.toggleEditing(false);
 
                         control.state('editing-disabled');
                     },
