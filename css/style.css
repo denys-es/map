@@ -1006,6 +1006,21 @@ table.dataTable.display tbody tr:hover.selected {
 
 #elevation-chart {
     position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* a bit of a hack because #elevation-chart style above always overtakes the class style of .collapse:not(.show) */
+#elevation-chart.collapse:not(.show) {
+    display: none;
+}
+
+.legend-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(250, 250, 250, 0.8);
 }
 
 #no-elevation-data {

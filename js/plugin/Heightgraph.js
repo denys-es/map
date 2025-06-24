@@ -12,7 +12,7 @@ BR.Heightgraph = function (map, layersControl, routing, pois) {
             mappings: {
                 gradient: {
                     '-16': {
-                        text: '< -15%',
+                        text: '< -15%',
                         color: '#81A850',
                     },
                     '-15': {
@@ -140,7 +140,7 @@ BR.Heightgraph = function (map, layersControl, routing, pois) {
                         color: '#D97457',
                     },
                     16: {
-                        text: '> 15%',
+                        text: '> 15%',
                         color: '#D66E53',
                     },
                 },
@@ -167,7 +167,7 @@ BR.Heightgraph = function (map, layersControl, routing, pois) {
             this.addTo(map);
 
             // move elevation graph outside of the map
-            setParent(this.getContainer(), document.getElementById('elevation-chart'));
+            setParent(this.getContainer(), document.getElementById('heightgraph-wrapper'));
 
             // bind the mouse move and mouse out handlers, I'll reuse them later on
             this._mouseMoveHandlerBound = this.mapMousemoveHandler.bind(this);
@@ -178,12 +178,13 @@ BR.Heightgraph = function (map, layersControl, routing, pois) {
 
             var self = this;
             var container = $('#elevation-chart');
+            var subcontainer = $('#heightgraph-wrapper');
             $(window).resize(function () {
                 // avoid useless computations if the chart is not visible
                 if (container.is(':visible')) {
                     self.resize({
-                        width: container.width(),
-                        height: container.height(),
+                        width: subcontainer.width(),
+                        height: subcontainer.height(),
                     });
                 }
             });
@@ -194,8 +195,8 @@ BR.Heightgraph = function (map, layersControl, routing, pois) {
             // for the container has the old width pre animation and new width post animation.
             container.on('shown.bs.collapse', function () {
                 self.resize({
-                    width: container.width(),
-                    height: container.height(),
+                    width: subcontainer.width(),
+                    height: subcontainer.height(),
                 });
             });
 
@@ -369,13 +370,11 @@ BR.Heightgraph = function (map, layersControl, routing, pois) {
                 existingLegend.remove();
             }
 
-            var legend = L.DomUtil.create('div', 'legend-container', this._container);
-            // hack to keep the chart from getting too tall,
-            // and to keep it from growing vertically on window resize
-            legend.style.setProperty('position', 'absolute');
-            // naively align the legend vertically with the y-axis
-            legend.style.setProperty('margin-left', '65px');
-            legend.style.setProperty('margin-top', '-18px');
+            var legend = L.DomUtil.create(
+                'div',
+                'legend-container',
+                document.getElementById('heightgraph-legend-wrapper')
+            );
 
             var legendLabel = L.DomUtil.create('span', 'legend-hover legend-text', legend);
             legendLabel.textContent = this._getTranslation('legend') + ':';
@@ -384,8 +383,6 @@ BR.Heightgraph = function (map, layersControl, routing, pois) {
                 var color = L.DomUtil.create('span', 'legend-rect', legend);
                 color.style.setProperty('padding-left', '10px');
                 color.style.setProperty('padding-right', '3px');
-                color.style.setProperty('width', '6px');
-                color.style.setProperty('height', '6px');
                 color.style.setProperty('color', l.color);
                 color.innerHTML = '&#9632;';
 
